@@ -1,0 +1,90 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+const int mx = 1e5 + 10;
+
+inline int RI() {
+    int  ret = 0, flag = 1,ip = getchar();
+    for(; ip < 48 || ip > 57; ip = getchar()) {
+        if(ip == 45) {
+            flag = -1;
+            ip = getchar();
+            break;
+        }
+    }
+    for(; ip > 47 && ip < 58; ip = getchar())
+        ret = ret * 10 + ip - 48 ;
+    return flag * ret;
+}
+
+struct node {
+    bool en;
+    int cnt;
+    node *next[26];
+    node() {
+        en = 0;
+        cnt = 0;
+        for( int i=0; i<26; i++ ) next[i] = NULL;
+    }
+    void insert( string &str, int p )  {
+        int id;
+        if( str.size() == p+1 ) {
+            cnt++;
+            en = 1;
+            return;
+        }
+        id = str[p] - 'a';
+        if( next[id] == NULL ) next[id] = new node();
+        next[id]->insert( str, p+1 );
+    }
+    int koita( string &str, int p )  {
+        int id;
+        if( str.size() == p+1 ) return cnt;
+        id = str[p] - 'a';
+        if( next[id] == NULL ) return 0;
+        return next[id]->koita( str, p+1 );
+    }
+    void del() {
+        for( int i=0; i<26; i++ ) {
+            if( next[i] != NULL ) next[i]->del();
+        }
+        delete this;
+    }
+} *root;
+
+string s;
+
+int main() {
+    #ifdef LU_SERIOUS
+        freopen( "in.txt", "r", stdin );
+//        freopen( "out.txt", "w+", stdout );
+    #endif // LU_SERIOUS
+    int t, cs, n, ans;
+    t = RI();
+    for( cs=1; cs<=t; cs++ ) {
+        root = new node();
+        n = RI();
+        for( int i=0; i<n; i++ ) {
+            cin >> s;
+            if( s.size() > 2 ) sort( s.begin()+1, s.end()-1 );
+            else continue;
+            cerr << s << "\n";
+            root->insert( s, 1 );
+        }
+        n = RI();
+        printf( "Case %d:\n", cs );
+        for( int i=0; i<n; i++ ) {
+            ans = 1;
+            getline( cin, s );
+            stringstream ss(s);
+            while( ss >> s ) {
+                if( s.size() > 2 ) sort( s.begin()+1, s.end()-1 );
+                else continue;
+                ans *= root->koita( s, 1 );
+            }
+            printf( "%d\n", ans );
+        }
+        root->del();
+    }
+    return 0;
+}
