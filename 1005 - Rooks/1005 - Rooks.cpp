@@ -3,7 +3,7 @@ using namespace std;
 //using ll = long long;
 const int sz = 1e5 + 10;
 int t, n, k, cs;
-unsigned long long dp[32][32][905];
+unsigned long long dp[32][32][32];
 
 int main() {
     #ifdef CLown1331
