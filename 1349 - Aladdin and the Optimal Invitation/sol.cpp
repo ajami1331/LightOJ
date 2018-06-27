@@ -9,7 +9,7 @@ const int sz = 5e4 + 10;
 #define sqr( a ) ( ( a ) * ( a ) )
  
 int t, n, m, q, ax, ay;
-ll row[sz], col[sz], total, half;
+int row[sz], col[sz], total, half;
 
 int main() {
 #ifdef CLown1331
@@ -38,13 +38,21 @@ int main() {
 
                 half = ceil( total / 2.0 );
 
-                for( int i=1; i<=n; i++ ) row[i] += row[i - 1];
+                for( int i=1; i<=n; i++ ) {
+                        row[i] += row[i - 1];
+                        if( row[i] >= half ) {
+                                ax = i;
+                                break;
+                        }
+                }
 
-                for( int i=1; i<=m; i++ ) col[i] += col[i - 1];
-
-                ax = lower_bound( row, row + 1 + n, half ) - row;
-
-                ay = lower_bound( col, col + 1 + m, half ) - col;
+                for( int i=1; i<=m; i++ ) {
+                        col[i] += col[i - 1];
+                        if( col[i] >= half ) {
+                                ay = i;
+                                break;
+                        }
+                }
 
                 printf( "Case %d: %d %d\n", cs, ax, ay );
  
