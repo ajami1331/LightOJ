@@ -15,7 +15,6 @@ ll ar[20];
 ll dp[20][20][2][2][2];
 
 ll rec( int x, int y, int st, int sf, int sb ) {
-        cerr << x << " " << y << " " << st << " " << sf << " " << sb << "\n";
         if( x > y ) return st && ( sf || sb );
         ll& ret = dp[x][y][st][sf][sb];
         if( ~ret ) return ret;
@@ -32,12 +31,13 @@ ll rec( int x, int y, int st, int sf, int sb ) {
                 }
                 ret += rec( x + 1, y, 0, 1, 1 );
         }
+        if( x == y ) ret = en + 1;
         return ret;
 }
 
 ll solve( ll x ) {
         if( x < 0 ) return 0;
-        if( x == 0 ) return 1;
+        if( x < 10 ) return x + 1;
         lim = 0;
         while( x > 0 ) {
                 ar[lim++] = x % 10;
@@ -45,7 +45,7 @@ ll solve( ll x ) {
         }
         reverse( ar, ar + lim );
         memset( dp, -1, sizeof dp );
-        return rec( 0, lim - 1, 0, 0, 0 ) + 1;
+        return rec( 0, lim - 1, 0, 0, 0 );
 }
 
 int main() {
