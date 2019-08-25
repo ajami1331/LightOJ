@@ -1,58 +1,120 @@
 #include <bits/stdc++.h>
 using namespace std;
+#pragma GCC diagnostic warning "-std=c++11"
+ 
+using ll = long long;
 
-typedef vector < vector < int > >  matrix;
-int mod = 1e9 + 7;
+#define sqr( a ) ( ( a ) * ( a ) )
 
-matrix multiply( const matrix &a, const matrix &b ) {
-    matrix c = vector < vector < int > > ( 2, vector < int > ( 2, 0 ) );
-    for( int k=0; k<2; k++ ) {
-        for( int i=0; i<2; i++ ) {
-            for( int j=0; j<2; j++ ) {
-                c[i][j] = ( c[i][j] + a[i][k] * b[k][j] ) % mod;
+int t, cs, a, b, n, m;
+int mod, ans;
+
+const int sz = 1e6 + 10;
+
+template <int mat_sz> struct Matrix {
+    int a[mat_sz][mat_sz];
+    void clear() {
+        memset(a, 0, sizeof(a));
+    }
+    void one() {
+        for( int i=0; i<mat_sz; i++ ) {
+            for( int j=0; j<mat_sz; j++ ) {
+                a[i][j] = i == j;
             }
         }
     }
-    return c;
-}
+    Matrix operator + (const Matrix &b) const {
+        Matrix tmp;
+        tmp.clear();
+        for (int i = 0; i <  mat_sz; i++) {
+            for (int j = 0; j < mat_sz; j++) {
+                tmp.a[i][j] = a[i][j] + b.a[i][j];
+                if (tmp.a[i][j] >= mod) {
+                    tmp.a[i][j] -= mod;
+                }
+            }
+        }
+        return tmp;
+    }
+    Matrix operator * (const Matrix &b) const {
+        Matrix tmp;
+        tmp.clear();
+        for (int i = 0; i < mat_sz; i++) {
+            for (int j = 0; j < mat_sz; j++) {
+                for (int k = 0; k < mat_sz; k++) {
+                    tmp.a[i][k] += (long long)a[i][j] * b.a[j][k] % mod;
+                    if (tmp.a[i][k] >= mod) {
+                        tmp.a[i][k] -= mod;
+                    }
+                }
+            }
+        }
+        return tmp;
+    }
+    Matrix pw(int x) {
+        Matrix ans, num = *this;
+        ans.one();
+        while (x > 0) {
+            if (x & 1) {
+                ans = ans * num;
+            }
+            num = num * num;
+            x >>= 1;
+        }
+        return ans;
+    }
+};
 
-matrix fast_expo( const matrix &m, int n ) {
-    if( n == 1 ) {
-        return m;
-    }
-    if( n & 1 ) {
-        return multiply( m, fast_expo( m, n-1 ) );
-    }
-    matrix a = fast_expo( m, n >> 1 );
-    return multiply( a, a );
-}
+
+Matrix <2> tmp, fn;
 
 int main() {
-    #ifdef LU_SERIOUS
-        freopen( "in.txt", "r", stdin );
-        freopen( "out.txt", "w+", stdout );
-    #endif // LU_SERIOUS
-    int t, a, b, n, m;
-    matrix mat = vector < vector < int > > ( 2, vector < int > ( 2, 0 ) );
-    scanf( "%d", &t );
-    for( int cs=1; cs<=t; cs++ ) {
-        scanf( "%d %d %d %d", &a, &b, &n, &m );
-        if( m == 1 ) mod = 10;
-        else if( m == 2 ) mod = 100;
-        else if( m == 3 ) mod = 1000;
-        else if( m == 4 ) mod = 10000;
-        mat[0][0] = 1;
-        mat[0][1] = 1;
-        mat[1][0] = 1;
-        mat[1][1] = 0;
-        printf( "Case %d: ", cs );
-        if( n > 1 ) {
-            mat = fast_expo( mat, n-1 );
-            printf( "%d\n", ( ( mat[0][0] * b ) + ( mat[0][1] * a ) ) % mod );
-        } else {
-            if( n == 0 ) printf( "%d\n", a % mod );
-            else printf( "%d\n", b % mod );
+
+        scanf("%d", &t);
+
+        fn.a[0][0] = 1;
+        fn.a[0][1] = 1;
+        fn.a[1][0] = 1;
+        fn.a[1][1] = 0;
+
+        for (int cs = 1; cs <= t; cs++) {
+
+            scanf("%d %d %d %d", &a, &b, &n, &m);
+
+            switch (m)
+            {
+            case 1:
+                mod = 10;
+                break;
+            case 2:
+                mod = 100;
+                break;
+            case 3:
+                mod = 1000;
+                break;
+            case 4:
+                mod = 10000;
+                break;
+            default:
+                break;
+            }
+
+            switch (n)
+            {
+            case 0:
+                ans = a % mod;
+                break;
+            case 1:
+                ans = b % mod;
+                break;
+            default:
+                tmp = fn.pw(n - 1);
+                ans = ((tmp.a[0][0] * b) + (tmp.a[0][1] * a)) % mod;
+                break;
+            }
+
+            printf( "Case %d: %d\n", cs, ans);
         }
-    }
-    return 0;
+
+        return 0;
 }
