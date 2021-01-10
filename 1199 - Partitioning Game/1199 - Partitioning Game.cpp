@@ -2,24 +2,30 @@
 using namespace std;
 
 typedef long long ll;
-const ll sz = 1e4 + 10;
+const ll sz = 2e4 + 10;
 int t, n, cs, _xor;
 int grundy[sz];
+bool mark[sz];
+int hand[sz];
 
 void get_val( int x ) {
-        set < int > st;
+        int cnt = 0;
         for( int i=1; i<=x; i++ ) {
                 int j = x - i;
                 if( i >= j ) break;
                 if( i != j ) {
-                        st.insert( grundy[i] ^ grundy[j] );
+                        mark[grundy[i] ^ grundy[j]] = 1;
+                        hand[cnt++] = grundy[i] ^ grundy[j];
                 }
         }
         for( int i=0; i<sz; i++ ) {
-                if( st.find( i ) == st.end() ) {
+                if(mark[i] == 0) {
                         grundy[x] = i;
                         break;
                 }
+        }
+        for (int i = 0; i < cnt; i++) {
+                mark[i] = 0;
         }
 }
 
@@ -30,7 +36,7 @@ int main() {
 
         for( int i=0; i<sz; i++ ) get_val( i );
 
-        scanf( "%lld", &t );
+        scanf( "%d", &t );
 
         for( cs=1; cs<=t; cs++ ) {
 
