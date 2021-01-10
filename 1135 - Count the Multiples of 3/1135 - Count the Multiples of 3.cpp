@@ -101,8 +101,8 @@ int main() {
     #ifdef CLown1331
         freopen("in.txt", "r", stdin);
     #endif // CLown1331
-//    scanf( "%d", &t );
-//    for( cs=1; cs<=t; cs++ ) {
+    scanf( "%d", &t );
+    for( cs=1; cs<=t; cs++ ) {
         scanf( "%d %d", &n, &q );
         build( 1, 0, n-1 );
         printf( "Case %d:\n", cs );
@@ -114,6 +114,6 @@ int main() {
                 printf( "%d\n", qu( 1, 0, n-1, x, y ) );
             }
         }
-//    }
+    }
     return 0;
 }

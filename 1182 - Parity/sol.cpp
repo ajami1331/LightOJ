@@ -98,57 +98,30 @@ VS str_tok(char *str){
     return ret;
 }
 
+bool calc(int n){
+    int ans = 0;
+    while(n){
+	ans += n&1;
+	n >>= 1;
+    }
+    return ans&1;
+}
+
 int main(){
 #ifdef LU_SERIOUS
     freopen("in.txt","r",stdin);
 #endif // LU_SERIOUS
-    int T, n, m, cs=0, x, y;
-    VI ar;
-    string s;
-    cin >> T;
-    while(T-- && cin >> n >> m){
-	ar.clear();
-	ar = VI(n);
-	REP(i,0,n){
-	    cin >> ar[i];
+    int T, n;
+    si1(T);
+    REP(cs,1,T+1){
+	si1(n);
+	printf("Case %d: ",cs);
+	if(calc(n)){
+	    printf("odd\n");
+	}else{
+	    printf("even\n");
 	}
-	pf("Case %d:\n",++cs);
-	REP(ki,0,m){
-	    cin >> s;
-	    if(s == "P"){
-		cin >> x >> y;
-		swap(ar[x],ar[y]);
-	    }
-	    if(s == "R"){
-		reverse(all(ar));
-	    }
-	    if(s == "D"){
-		cin >> x;
-		for(int i=0; i<ar.size(); i++){
-		    ar[i] /= x;
-		}
-	    }
-	    if(s == "M"){
-		cin >> x;
-		for(int i=0; i<ar.size(); i++){
-		    ar[i] *= x;
-		}
-	    }
-	    if(s == "S"){
-		cin >> x;
-		for(int i=0; i<ar.size(); i++){
-		    ar[i] += x;
-		}
-	    }
-	}     
-	for(int i=0; i<ar.size(); i++){
-	    if(i){
-		putchar(' ');
-	    }	
-	    pf("%d",ar[i]);
-	}
-	pf("\n");
-    } 
+    }
     return 0;
 }
 
